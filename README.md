@@ -2,12 +2,10 @@
 
 ## Prerequisites
 
-- [The Go Programming Language
-](https://golang.org/)
+- [The Go Programming Language](https://golang.org/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Docker Hub Account](https://hub.docker.com/)
 - [HashuCorp Terraform](https://www.terraform.io/downloads.html)
-
 
 ## Create Test App
 
@@ -46,9 +44,9 @@ Using your favorite editor create a multi-stage Dokcerfile named *Dockerfile* wi
 
 ``` Dockerfile
 FROM golang:alpine as builder
-RUN mkdir /build 
+RUN mkdir /build
 ADD . /build/
-WORKDIR /build 
+WORKDIR /build
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
 FROM scratch
 COPY --from=builder /build/main /app/
@@ -75,9 +73,10 @@ docker container stop <CONTAINER-ID>
 ```
 
 Tag the image and push to Docker Hub:
+
 ``` bash
-docker tag docker-test craigmartinson/docker-test
-docker push craigmartinson/docker-test
+docker tag docker-test <DOCKERHUB-ACCOUNT>/docker-test
+docker push <DOCKERHUB-ACCOUNT>/docker-test
 ```
 
 ## Use Terraform to Deploy to Kubernettes
@@ -109,7 +108,7 @@ resource "kubernetes_replication_controller" "docker-test" {
     }
     template {
       container {
-        image = "craigmartinson/docker-test"
+        image = "<DOCKERHUB-ACCOUNT>/docker-test"
         name  = "docker-test"
 
         port {
@@ -151,6 +150,12 @@ resource "kubernetes_service" "docker-test" {
 
 ```
 
+Initialize Terraform providers:
+
+``` bash
+terraform init
+```
+
 Use terraform to deploy our service to Kubernettes:
 
 ``` bash
@@ -162,6 +167,7 @@ Type 'yes' to confirm.
 ## Validate Deployment
 
 ### Using Command Line
+
 Use kubectl to check deployment:
 
 ``` bash
@@ -169,7 +175,8 @@ kubectl get pods --namespace test
 ```
 
 ### Using Kubernettes Dashboard
-Deploy the Kubernettes dashbaord using the following command:
+
+Deploy the Kubernettes dashboard using the following command:
 
 ``` bash
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
@@ -184,6 +191,13 @@ kubectl proxy
 The Kubernettes dashboard should now be available at:
 http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 
+### Using curl
+
+Test the deployed service using curl:
+
+``` bash
+curl http://localhost:8000
+```
 
 ## Clean Up
 
