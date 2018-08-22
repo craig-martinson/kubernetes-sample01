@@ -1,11 +1,11 @@
-# Deploying a minimal go application onto Kubernettes using Docker Desktop and Terraform
+# Deploying a minimal go application onto Kubernetes using Docker Desktop and Terraform
 
 ## Prerequisites
 
 - [The Go Programming Language](https://golang.org/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Docker Hub Account](https://hub.docker.com/)
-- [HashuCorp Terraform](https://www.terraform.io/downloads.html)
+- [HashiCorp Terraform](https://www.terraform.io/downloads.html)
 
 ## Create Test App
 
@@ -40,7 +40,7 @@ Test the app works as expected by navigating to http://localhost:8080/ in your b
 
 ## Create Docker Image
 
-Using your favorite editor create a multi-stage Dokcerfile named *Dockerfile* with the following code:
+Using your favorite editor create a multi-stage Dockerfile named *Dockerfile* with the following code:
 
 ``` Dockerfile
 FROM golang:alpine as builder
@@ -79,7 +79,7 @@ docker tag docker-test <DOCKERHUB-ACCOUNT>/docker-test
 docker push <DOCKERHUB-ACCOUNT>/docker-test
 ```
 
-## Use Terraform to Deploy to Kubernettes
+## Use Terraform to Deploy to Kubernetes
 
 Using your favorite editor create a file named *app.tf* with the following code:
 
@@ -156,7 +156,7 @@ Initialize Terraform providers:
 terraform init
 ```
 
-Use terraform to deploy our service to Kubernettes:
+Use terraform to deploy our service to Kubernetes:
 
 ``` bash
 terraform apply
@@ -174,9 +174,9 @@ Use kubectl to check deployment:
 kubectl get pods --namespace test
 ```
 
-### Using Kubernettes Dashboard
+### Using Kubernetes Dashboard
 
-Deploy the Kubernettes dashboard using the following command:
+Deploy the Kubernetes dashboard using the following command:
 
 ``` bash
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
@@ -188,7 +188,7 @@ Use the kubectl command line proxy to access the dashboard:
 kubectl proxy
 ```
 
-The Kubernettes dashboard should now be available at:
+The Kubernetes dashboard should now be available at:
 http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 
 ### Using curl
@@ -214,4 +214,4 @@ Type 'yes' to confirm.
 
 - [Containerize This! How to build Golang Dockerfiles](https://www.cloudreach.com/blog/containerize-this-golang-dockerfiles/)
 - [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-- [Terraform Kubernettes Provider](https://www.terraform.io/docs/providers/kubernetes/index.html)
+- [Terraform Kubernetes Provider](https://www.terraform.io/docs/providers/kubernetes/index.html)
